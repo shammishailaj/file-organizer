@@ -24,7 +24,14 @@ To organize files in the current directory
 ```
 ./file-organizer
 ```
+
 To organize files in a specific directory
 ```
 ./file-organizer -p /path/to/unorganized/directory
 ``` 
+
+To see the command-line options
+
+```
+./file-organizer -h
+```
