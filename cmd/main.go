@@ -31,7 +31,7 @@ func visit(files *[]string) filepath.WalkFunc {
 func main() {
 	var files []string
 	var pathErr error
-	var root string
+	var root, userConsent string
 
 	fpath := flag.String("p", "", "Path inside which to arrange the files into a YYYY/mm/dd folder structure. Defaults to the current directory. PLEASE NOTE: This program does not recurse into sub-directories")
 
@@ -45,6 +45,14 @@ func main() {
 			root = *fpath
 		}
 	}
+
+	fmt.Printf("This is your LAST CHANCE to stop this. Enter Y/N(Y=Yes, continue. N=No, stop and exit)? ")
+	fmt.Scanf("%s", &userConsent)
+	if userConsent != "Y" {
+		fmt.Printf("You did not give consent to continue. Exiting...")
+		os.Exit(-1)
+	}
+
 	err := filepath.Walk(root, visit(&files))
 	if err != nil {
 		panic(err)

@@ -16,3 +16,15 @@ Navigate to the project root and execute the following command
 ```
 make
 ```
+
+# Usage
+---
+To organize files in the current directory
+
+```
+./file-organizer
+```
+To organize files in a specific directory
+```
+./file-organizer -p /path/to/unorganized/directory
+``` 
