@@ -46,10 +46,10 @@ func main() {
 		}
 	}
 
-	fmt.Printf("This is your LAST CHANCE to stop this. Enter Y/N(Y=Yes, continue. N=No, stop and exit)? ")
+	fmt.Printf("\nThis is your LAST CHANCE to stop this. Enter Y/N(Y=Yes, continue. N=No, stop and exit)? ")
 	fmt.Scanf("%s", &userConsent)
 	if userConsent != "Y" {
-		fmt.Printf("You did not give consent to continue. Exiting...")
+		fmt.Printf("\nYou did not give consent to continue. Exiting...\n")
 		os.Exit(-1)
 	}
 
