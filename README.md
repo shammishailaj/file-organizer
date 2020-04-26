@@ -7,3 +7,12 @@ into directories of the format
 ```
 /path/to/directory/yyyy/mm/dd/filename.extension
 ```
+
+# Build
+---
+
+Navigate to the project root and execute the following command
+
+```
+make
+```
