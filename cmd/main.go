@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"path"
@@ -29,7 +30,6 @@ func visit(files *[]string) filepath.WalkFunc {
 }
 
 func main() {
-	var files []string
 	var pathErr error
 	var root, userConsent string
 
@@ -53,16 +53,28 @@ func main() {
 		os.Exit(-1)
 	}
 
-	err := filepath.Walk(root, visit(&files))
+	files, err := ioutil.ReadDir(root)
 	if err != nil {
 		panic(err)
 	}
+
+	//var files []string
+	//err := filepath.Walk(root, visit(&files))
+	//if err != nil {
+	//	panic(err)
+	//}
+
 	for fileKey, file := range files {
-		fi, err := os.Stat(file)
+		fi, err := os.Stat(file.Name())
 		if err != nil {
 			fmt.Printf("Error stating file %s. Details: %s", file, err.Error())
 		}
-		modifiedTime := fi.ModTime()
+		var modifiedTime time.Time
+		modifiedTime = fi.ModTime()
+		if modifiedTime == nil {
+			log.Printf("Unable to find Modified time for %s. Skipping...", file.Name())
+			continue
+		}
 		fiSys := fi.Sys().(*syscall.Stat_t)
 		atime := time.Unix(fiSys.Atimespec.Unix())
 		ctime := time.Unix(fiSys.Ctimespec.Unix())
@@ -77,7 +89,7 @@ func main() {
 
 		dirString := root + "/" + strconv.Itoa(btime_yyyy) + "/" + strconv.Itoa(btime_mm) + "/" + strconv.Itoa(btime_dd)
 
-		organizedFilePath := dirString + "/" + path.Base(file)
+		organizedFilePath := dirString + "/" + path.Base(file.Name())
 
 		if _, err := os.Stat(dirString); os.IsNotExist(err) {
 			fmt.Printf("Directory %s Nonexistent. Creating...\n", dirString)
@@ -87,8 +99,8 @@ func main() {
 			}
 		}
 
-		if ! fi.IsDir() {
-			moveFileErr := os.Rename(file, organizedFilePath)
+		if !fi.IsDir() {
+			moveFileErr := os.Rename(file.Name(), organizedFilePath)
 			if err != nil {
 				fmt.Printf("Error moving file from %s to %s. Details: %s\n", file, organizedFilePath, moveFileErr.Error())
 			} else {
